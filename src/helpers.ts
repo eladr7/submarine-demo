@@ -13,9 +13,9 @@ export const removeNumbersFromArray = (
   return resultArray;
 };
 
-// Generate a random number between 0 and rangeEnd
+// Generate a random number between 0 and rangeEnd - 1
 export const getRandomNumberFromRange = (rangeEnd: number) =>
-  Math.floor(Math.random() * (rangeEnd + 1));
+  Math.floor(Math.random() * rangeEnd);
 
 export const range = (rangeEnd: number) =>
   Array.from({ length: rangeEnd }, (_, index) => index);

@@ -19,18 +19,19 @@ export class SubmarineGame {
       let randomCoordinate = getRandomNumberFromRange(100 - numOfRemoved);
 
       // Get the surrounding sqyares of that corrdinate
-      let surroundingCoordinates =
-        this.getSurroundingCoordinates(randomCoordinate);
+      let surroundingCoordinates = this.getSurroundingCoordinates(
+        availableSquares[randomCoordinate]
+      );
 
       // Asign a submarine to the chosen coordinate
-      this.answersBoard[randomCoordinate] = true;
+      this.answersBoard[availableSquares[randomCoordinate]] = true;
 
       availableSquares = removeNumbersFromArray(
         availableSquares,
         surroundingCoordinates
       );
 
-      numOfRemoved = surroundingCoordinates.length;
+      numOfRemoved += surroundingCoordinates.length;
     }
   }
 
@@ -76,7 +77,7 @@ export class SubmarineGame {
 
     // If the coordinate is in the last row and the right edge:
     if (coordinate === 99) {
-      return [89, 89, 98, 99];
+      return [88, 89, 98, 99];
     }
 
     // If the coordinate is in the first column but not in one of the edges:
