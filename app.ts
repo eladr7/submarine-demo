@@ -5,7 +5,7 @@ const main = () => {
   game.printAnswersBoard();
   for (let i = 0; i < 99; i++) {
     game.updateBoard(i);
-    game.printBoard();
+    game.printPlayBoard();
   }
 };
 

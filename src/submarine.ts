@@ -1,6 +1,4 @@
-import { removeNumbersFromArray } from "./helpers";
 import { getRandomNumberFromRange } from "./helpers";
-import { range } from "./helpers";
 
 export class SubmarineGame {
   playBoard: boolean[] = new Array<boolean>(100).fill(false);
@@ -10,114 +8,120 @@ export class SubmarineGame {
   }
 
   private fillBoard() {
-    // Initialize an array with random numbers in the range of [0,..99]
-    let availableSquares = range(100);
-
-    let numOfRemoved = 0;
-    for (let i = 0; i < 50; i++) {
-      if (availableSquares.length === 0) break;
-
-      // Get a random number from the array of available squares
-      let randomCoordinate = getRandomNumberFromRange(100 - numOfRemoved);
-
-      // Get the surrounding sqyares of that corrdinate
-      let surroundingCoordinates = this.getSurroundingCoordinates(
-        availableSquares[randomCoordinate]
-      );
-
+    let numOfSubmarines = 0;
+    while (numOfSubmarines < 10) {
+      let randomCoordinate = getRandomNumberFromRange(100);
+      if (!this.check(randomCoordinate)) {
+        continue;
+      }
       // Asign a submarine to the chosen coordinate
-      this.answersBoard[availableSquares[randomCoordinate]] = true;
+      this.answersBoard[randomCoordinate] = true;
 
-      availableSquares = removeNumbersFromArray(
-        availableSquares,
-        surroundingCoordinates
-      );
-
-      numOfRemoved += surroundingCoordinates.length;
+      numOfSubmarines += 1;
     }
   }
 
-  private getSurroundingCoordinates(coordinate: number) {
+  private check(coordinate: number) {
     // If the coordinate is in the first row but not in one of the edges:
     if (coordinate > 0 && coordinate < 9) {
-      return [
-        coordinate - 1,
-        coordinate,
-        coordinate + 1,
-        coordinate + 9,
-        coordinate + 10,
-        coordinate + 11,
-      ];
+      return !(
+        this.answersBoard[coordinate - 1] ||
+        this.answersBoard[coordinate] ||
+        this.answersBoard[coordinate + 1] ||
+        this.answersBoard[coordinate + 9] ||
+        this.answersBoard[coordinate + 10] ||
+        this.answersBoard[coordinate + 11]
+      );
     }
 
     // If the coordinate is in the first row and the left edge:
     if (coordinate === 0) {
-      return [0, 1, 10, 11];
+      return !(
+        this.answersBoard[0] ||
+        this.answersBoard[1] ||
+        this.answersBoard[10] ||
+        this.answersBoard[11]
+      );
     }
 
     // If the coordinate is in the first row and the right edge:
     if (coordinate === 9) {
-      return [8, 9, 18, 19];
+      return !(
+        this.answersBoard[8] ||
+        this.answersBoard[9] ||
+        this.answersBoard[18] ||
+        this.answersBoard[19]
+      );
     }
 
     // If the coordinate is in the last row but not in one of the edges:
     if (coordinate > 90 && coordinate < 99) {
-      return [
-        coordinate - 11,
-        coordinate - 10,
-        coordinate - 9,
-        coordinate - 1,
-        coordinate,
-        coordinate + 1,
-      ];
+      return !(
+        this.answersBoard[coordinate - 11] ||
+        this.answersBoard[coordinate - 10] ||
+        this.answersBoard[coordinate - 9] ||
+        this.answersBoard[coordinate - 1] ||
+        this.answersBoard[coordinate] ||
+        this.answersBoard[coordinate + 1]
+      );
     }
 
     // If the coordinate is in the last row and the left edge:
     if (coordinate === 90) {
-      return [80, 81, 90, 91];
+      return !(
+        this.answersBoard[80] ||
+        this.answersBoard[91] ||
+        this.answersBoard[90] ||
+        this.answersBoard[91]
+      );
     }
 
     // If the coordinate is in the last row and the right edge:
     if (coordinate === 99) {
-      return [88, 89, 98, 99];
+      return !(
+        this.answersBoard[88] ||
+        this.answersBoard[89] ||
+        this.answersBoard[98] ||
+        this.answersBoard[99]
+      );
     }
 
     // If the coordinate is in the first column but not in one of the edges:
     if (coordinate % 10 === 0) {
-      return [
-        coordinate - 10,
-        coordinate - 9,
-        coordinate,
-        coordinate + 1,
-        coordinate + 10,
-        coordinate + 11,
-      ];
+      return !(
+        this.answersBoard[coordinate - 10] ||
+        this.answersBoard[coordinate - 9] ||
+        this.answersBoard[coordinate] ||
+        this.answersBoard[coordinate + 1] ||
+        this.answersBoard[coordinate + 10] ||
+        this.answersBoard[coordinate + 11]
+      );
     }
 
     // If the coordinate is in the last column but not in one of the edges:
     if (coordinate % 10 === 9) {
-      return [
-        coordinate - 11,
-        coordinate - 10,
-        coordinate - 1,
-        coordinate,
-        coordinate + 9,
-        coordinate + 10,
-      ];
+      return !(
+        this.answersBoard[coordinate - 11] ||
+        this.answersBoard[coordinate - 10] ||
+        this.answersBoard[coordinate - 1] ||
+        this.answersBoard[coordinate] ||
+        this.answersBoard[coordinate + 9] ||
+        this.answersBoard[coordinate + 10]
+      );
     }
 
     // The coordinate is not on any edge:
-    return [
-      coordinate - 11,
-      coordinate - 10,
-      coordinate - 9,
-      coordinate - 1,
-      coordinate,
-      coordinate + 1,
-      coordinate + 9,
-      coordinate + 10,
-      coordinate + 11,
-    ];
+    return !(
+      this.answersBoard[coordinate - 11] ||
+      this.answersBoard[coordinate - 10] ||
+      this.answersBoard[coordinate - 9] ||
+      this.answersBoard[coordinate - 1] ||
+      this.answersBoard[coordinate] ||
+      this.answersBoard[coordinate + 1] ||
+      this.answersBoard[coordinate + 9] ||
+      this.answersBoard[coordinate + 10] ||
+      this.answersBoard[coordinate + 11]
+    );
   }
 
   updateBoard(coordinate: number) {
@@ -135,25 +139,22 @@ export class SubmarineGame {
     console.log("No submarine here");
   }
 
-  printBoard() {
+  private printBoard(board: boolean[]) {
     for (let row = 0; row < 10; row++) {
       let rowString = "";
       for (let col = 0; col < 10; col++) {
         const index = row * 10 + col;
-        rowString += this.playBoard[index] ? "X " : "O ";
+        rowString += board[index] ? "X " : "O ";
       }
       console.log(rowString);
     }
   }
 
+  printPlayBoard() {
+    this.printBoard(this.playBoard);
+  }
+
   printAnswersBoard() {
-    for (let row = 0; row < 10; row++) {
-      let rowString = "";
-      for (let col = 0; col < 10; col++) {
-        const index = row * 10 + col;
-        rowString += this.answersBoard[index] ? "X " : "O ";
-      }
-      console.log(rowString);
-    }
+    this.printBoard(this.answersBoard);
   }
 }
