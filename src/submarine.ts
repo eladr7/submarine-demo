@@ -14,7 +14,9 @@ export class SubmarineGame {
     let availableSquares = range(100);
 
     let numOfRemoved = 0;
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 50; i++) {
+      if (availableSquares.length === 0) break;
+
       // Get a random number from the array of available squares
       let randomCoordinate = getRandomNumberFromRange(100 - numOfRemoved);
 
